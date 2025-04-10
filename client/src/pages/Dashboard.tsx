@@ -4,6 +4,7 @@ import axios from "axios"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { useToast } from "@/components/ui/use-toast"
@@ -18,6 +19,8 @@ const Dashboard = () => {
   const { toast } = useToast()
   const [services, setServices] = useState<Service[]>([])
   const [newService, setNewService] = useState("")
+  const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("operational");
 
   const fetchServices = async () => {
     try {
@@ -36,10 +39,14 @@ const Dashboard = () => {
       const token = localStorage.getItem("token")
       const res = await axios.post(
         "http://localhost:5000/api/services",
-        { name: newService },
+        { name: newService,
+            description,
+            status
+         },
         { headers: { Authorization: `Bearer ${token}` } }
       )
       setNewService("")
+      setDescription("")
       toast({ title: "Service added!" })
       fetchServices()
     } catch (err) {
@@ -98,13 +105,35 @@ const Dashboard = () => {
 
 
       {/* Add Service */}
-      <div className="flex gap-4 mb-6">
+      <div className="max-w-2xl mx-auto mt-10 space-y-6 p-4 ">
         <Input
-          placeholder="New service name"
-          value={newService}
-          onChange={(e) => setNewService(e.target.value)}
+            placeholder="New service name"
+            value={newService}
+            onChange={(e) => setNewService(e.target.value)}
         />
-        <Button onClick={addService}>Add</Button>
+
+        <Textarea
+            placeholder="Service description"
+            value={description}
+            onChange={(e:any) => setDescription(e.target.value)}
+        />
+
+        <Select value={status} onValueChange={setStatus}>
+            <SelectTrigger>
+            <SelectValue placeholder="Select status" />
+            </SelectTrigger>
+            <SelectContent>
+            <SelectItem value="Operational">Operational</SelectItem>
+            <SelectItem value="Maintenance">Maintenance</SelectItem>
+            <SelectItem value="Partial Outage">Partial Outage</SelectItem>
+            <SelectItem value="Major Outage">Major Outage</SelectItem>
+            </SelectContent>
+        </Select>
+
+        <Button onClick={addService} className="w-full">
+            Add Service
+        </Button>
+    
       </div>
 
       {/* List Services */}
@@ -127,8 +156,9 @@ const Dashboard = () => {
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="Operational">Operational</SelectItem>
-                        <SelectItem value="Maintenance">Maintenance</SelectItem>
-                        <SelectItem value="Down">Down</SelectItem>
+                        <SelectItem value="Degraded Performance">Maintenance</SelectItem>
+                        <SelectItem value="Partial Outage">Partial Outage</SelectItem>
+                        <SelectItem value="Major Outage">Major Outage</SelectItem>
                     </SelectContent>
                 </Select>
                 <Button variant="destructive" onClick={() => deleteService(service._id)}>

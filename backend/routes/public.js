@@ -1,14 +1,15 @@
-// routes/public.js or part of your existing service.js
-
 const express = require('express');
 const router = express.Router();
-const Service = require('../models/service'); // update path if needed
+const Service = require('../models/service'); 
+const Incident= require('../models/incident')
 
 // GET all services (public)
 router.get('/public/services', async (req, res) => {
   try {
     const services = await Service.find({});
-    res.json(services);
+    const activeIncidents = await Incident.find({ status: "active" }).sort({ createdAt: -1 });
+    const timeline = await Incident.find({}).sort({ createdAt: -1 }).limit(10);
+    res.json({ services, activeIncidents, timeline });
   } catch (error) {
     console.error('Error fetching services:', error);
     res.status(500).json({ message: 'Server error' });
