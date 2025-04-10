@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const serviceRoutes = require('./routes/serviceRoutes');
 const authRoutes = require('./routes/auth');
+const publicRoutes = require('./routes/public');
 
 require('dotenv').config();
 const app = express();
@@ -13,5 +14,6 @@ mongoose.connect(process.env.MONGO_URI).then(() => console.log("MongoDB Connecte
 
 app.use('/api/services', serviceRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api', publicRoutes);
 
 app.listen(5000, () => console.log("Server running on port 5000"));

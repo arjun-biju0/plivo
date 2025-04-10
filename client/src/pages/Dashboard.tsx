@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { useToast } from "@/components/ui/use-toast"
 
 interface Service {
@@ -45,6 +46,34 @@ const Dashboard = () => {
       toast({ title: "Failed to add service" })
     }
   }
+  const updateStatus = async (id: string, newStatus: string) => {
+    try {
+        console.log(id);
+        
+      const token = localStorage.getItem("token")
+      await axios.put(
+        `http://localhost:5000/api/services/${id}`,
+        { status: newStatus },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      toast({ title: "Status updated" })
+      fetchServices()
+    } catch (err) {
+      toast({ title: "Failed to update status" })
+    }
+  }
+  const deleteService = async (id: string) => {
+    try {
+      const token = localStorage.getItem("token")
+      await axios.delete(`http://localhost:5000/api/services/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      toast({ title: "Service deleted" })
+      fetchServices()
+    } catch (err) {
+      toast({ title: "Failed to delete service" })
+    }
+  }
 
   useEffect(() => {
     fetchServices()
@@ -53,6 +82,20 @@ const Dashboard = () => {
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold">Welcome</h2>
+        <Button
+            className="bg-red-500 text-white hover:bg-red-600"
+            variant="outline"
+            onClick={() => {
+            localStorage.removeItem("token")
+            window.location.href = "/login"
+            }}
+        >
+            Logout
+        </Button>
+    </div>
+
 
       {/* Add Service */}
       <div className="flex gap-4 mb-6">
@@ -74,8 +117,23 @@ const Dashboard = () => {
                 <p className="text-sm text-muted-foreground">{service.status}</p>
               </div>
               <div className="flex gap-2">
-                <Button variant="secondary">Edit</Button>
-                <Button variant="destructive">Delete</Button>
+                <Select
+                    defaultValue=""
+                    
+                    onValueChange={(newStatus: any ) => updateStatus(service._id, newStatus)}
+                    >
+                    <SelectTrigger className="w-[150px]">
+                        <SelectValue className="text-sm text-black" placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="Operational">Operational</SelectItem>
+                        <SelectItem value="Maintenance">Maintenance</SelectItem>
+                        <SelectItem value="Down">Down</SelectItem>
+                    </SelectContent>
+                </Select>
+                <Button variant="destructive" onClick={() => deleteService(service._id)}>
+                Delete
+                </Button>
               </div>
             </CardContent>
           </Card>
