@@ -5,7 +5,7 @@ function initSocket(server) {
 
   io = new Server(server, {
     cors: {
-      origin: "https://plivo-frontend.onrender.com/", // frontend URL
+      origin: "https://plivo-frontend.onrender.com", // frontend URL
       methods: ["GET", "POST"],
     },
   });
