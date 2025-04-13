@@ -62,11 +62,11 @@ const Dashboard = () => {
         `http://localhost:5000/api/services/${id}`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
-      )
+      )  
       toast({ title: "Status updated" })
       fetchServices()
     } catch (err) {
-      toast({ title: "Failed to update status" })
+      toast({ title: "Members cannot update status" })
     }
   }
   const deleteService = async (id: string) => {

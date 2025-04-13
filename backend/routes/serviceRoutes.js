@@ -2,13 +2,15 @@ const express = require('express');
 const router = express.Router();
 const Service = require('../models/service');
 const adminAuth = require('../middlewares/adminAuth');
-const verifyToken = require('../middlewares/verify');
+const {verifyToken, isAdmin} = require('../middlewares/verify');
 const { emitStatusUpdate } = require("../socket");
+const organization = require('../models/organization');
 
 // Get all services
-router.get('/', async (req, res) => {
+router.get('/',verifyToken, async (req, res) => {
     try {
-        const services = await Service.find();
+        const orgId = req.user.orgId;
+        const services = await Service.find({organizationId:orgId});
         res.json(services);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -16,9 +18,16 @@ router.get('/', async (req, res) => {
 });
 
 // Add new service
-router.post('/',verifyToken, async (req, res) => {
+router.post('/',verifyToken,isAdmin, async (req, res) => {
     try {
-        const service = new Service(req.body);
+        
+        const service = new Service({
+          name:req.body.name,
+          description:req.body.description,
+          status:req.body.status,
+          organizationId: req.user.orgId
+        }
+        );
         await service.save();
         emitStatusUpdate({ type: "service", data: service });
 
@@ -29,10 +38,9 @@ router.post('/',verifyToken, async (req, res) => {
 });
 
 // Update a service
-router.put('/:id', verifyToken, async (req, res) => {
+router.put('/:id', verifyToken,isAdmin, async (req, res) => {
   const { id } = req.params;
-  const { status } = req.body;
-  
+  const { status } = req.body;  
   
     try {
       const updated = await Service.findByIdAndUpdate(id, {status}, { new: true });
@@ -47,7 +55,7 @@ router.put('/:id', verifyToken, async (req, res) => {
   });
 
   // Delete a service
-  router.delete('/:id', verifyToken, async (req, res) => {
+  router.delete('/:id', verifyToken,isAdmin, async (req, res) => {
     try {
       const deletedService= await Service.findByIdAndDelete(req.params.id);
       if (!deletedService) {
