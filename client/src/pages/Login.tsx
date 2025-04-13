@@ -16,7 +16,7 @@ const Login = () => {
 
     try {
       
-      const response= await axios.post('http://localhost:5000/api/auth/login',{email,password})
+      const response= await axios.post('https://plivo-sgnh.onrender.com/api/auth/login',{email,password})
 
       const { token } = response.data
 

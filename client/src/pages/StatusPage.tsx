@@ -36,7 +36,7 @@ export default function StatusPage() {
   const [timeline, setTimeline] = useState<Incident[]>([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/public/services')
+    axios.get('https://plivo-sgnh.onrender.com/api/public/services')
       .then(res => {
         setServices(res.data.services);
         setIncidents(res.data.activeIncidents);

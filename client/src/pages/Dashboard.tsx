@@ -26,7 +26,7 @@ const Dashboard = () => {
   const fetchServices = async () => {
     try {
       const token = localStorage.getItem("token")
-      const res = await axios.get("http://localhost:5000/api/services", {
+      const res = await axios.get("https://plivo-sgnh.onrender.com/api/services", {
         headers: { Authorization: `Bearer ${token}` },
       })
       setServices(res.data)
@@ -39,7 +39,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem("token")
       const res = await axios.post(
-        "http://localhost:5000/api/services",
+        "https://plivo-sgnh.onrender.com/api/services",
         { name: newService,
             description,
             status
@@ -60,7 +60,7 @@ const Dashboard = () => {
         
       const token = localStorage.getItem("token")
       await axios.put(
-        `http://localhost:5000/api/services/${id}`,
+        `https://plivo-sgnh.onrender.com/api/services/${id}`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       )  
@@ -73,7 +73,7 @@ const Dashboard = () => {
   const deleteService = async (id: string) => {
     try {
       const token = localStorage.getItem("token")
-      await axios.delete(`http://localhost:5000/api/services/${id}`, {
+      await axios.delete(`https://plivo-sgnh.onrender.com/api/services/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       toast({ title: "Service deleted" })
