@@ -18,7 +18,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/status" element={<StatusPage />} />
+        <Route path="/" element={<StatusPage />} />
       </Routes>
     </BrowserRouter>
   )

@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { useToast } from "@/components/ui/use-toast"
+import {jwtDecode} from 'jwt-decode';
 
 interface Service {
   _id: string
@@ -83,12 +84,24 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    fetchServices()
+    const token = localStorage.getItem("token")
+    if (token) {
+      const decoded:any = jwtDecode(token)
+      const currentTime = Date.now() / 1000
+      if (decoded.exp < currentTime) {
+        localStorage.removeItem("token")
+        window.location.href = "/login"
+      } else {
+        fetchServices()
+      }
+    } else {
+      window.location.href = "/login"
+    }
   }, [])
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Welcome</h2>
         <Button
