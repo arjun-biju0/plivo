@@ -5,6 +5,7 @@ const serviceRoutes = require('./routes/serviceRoutes');
 const authRoutes = require('./routes/auth');
 const publicRoutes = require('./routes/public');
 const incidentRoutes=require('./routes/incident')
+const registerRoutes=require('./routes/register')
 const {initSocket}= require('./socket')
 const http = require("http");
 
@@ -24,5 +25,6 @@ app.use('/api/services', serviceRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', publicRoutes);
 app.use('/api/incidents', incidentRoutes);
+app.use('/api/register',registerRoutes);
 
 server.listen(5000, () => console.log("Server running on port 5000"));

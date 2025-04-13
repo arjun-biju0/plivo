@@ -124,7 +124,7 @@ const Dashboard = () => {
             </SelectTrigger>
             <SelectContent>
             <SelectItem value="Operational">Operational</SelectItem>
-            <SelectItem value="Maintenance">Maintenance</SelectItem>
+            <SelectItem value="Degraded Performance">Degraded Performance</SelectItem>
             <SelectItem value="Partial Outage">Partial Outage</SelectItem>
             <SelectItem value="Major Outage">Major Outage</SelectItem>
             </SelectContent>
@@ -156,7 +156,7 @@ const Dashboard = () => {
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="Operational">Operational</SelectItem>
-                        <SelectItem value="Degraded Performance">Maintenance</SelectItem>
+                        <SelectItem value="Degraded Performance">Degraded Performance</SelectItem>
                         <SelectItem value="Partial Outage">Partial Outage</SelectItem>
                         <SelectItem value="Major Outage">Major Outage</SelectItem>
                     </SelectContent>

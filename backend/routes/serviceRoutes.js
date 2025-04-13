@@ -8,8 +8,6 @@ const { emitStatusUpdate } = require("../socket");
 // Get all services
 router.get('/', async (req, res) => {
     try {
-        console.log("incoming request");
-        
         const services = await Service.find();
         res.json(services);
     } catch (err) {
